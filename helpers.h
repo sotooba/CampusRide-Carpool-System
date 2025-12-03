@@ -32,7 +32,10 @@ string normalizePhone(const string &number);
 bool isValidNumber(const string &number);
 void saveUser(const User &user);
 void printSuccessMessage(const User &user);
-
-
+void createRide();
+bool isDriver(const string &cnic);
+int get_next_ride_ID();
+void append_rideto_csv(const Ride &ride);
+bool rideConflict(const Ride &ride);
 
 #endif

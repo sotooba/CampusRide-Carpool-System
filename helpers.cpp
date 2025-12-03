@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 #include "helpers.h"
 
@@ -169,3 +170,108 @@ void printSuccessMessage(const User &user)
         cout << left << setw(17) << "Capacity:" << user.vehicle_capacity << endl;
     cout << "----------------------------------------" << endl;
 }
+
+
+bool isDriver(const string &cnic)
+{
+    ifstream infile("users.csv");
+
+    if (!infile)
+        return false;
+
+    string line;
+    while (getline(infile, line)){  // Read whole line
+        stringstream ss(line);  // Create string stream from that line
+
+        string dummy, fileCNIC;
+        int role;
+
+        getline (ss, fileCNIC, ',');    // Reads CNIC from line & stops at ','
+        getline (ss, dummy, ',');   // Reads name
+        getline (ss, dummy, ',');   // Name is overwritten by role here
+
+        role = stoi(dummy); // Converts string into int
+
+        if (fileCNIC == cnic && (role == 1 || role == 3)){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+int get_next_ride_ID()
+{
+    ifstream infile("rides.csv");
+
+    if(!infile)
+        return 1;   // File does not exist, so it's a first ride
+    
+    int maxID = 0;
+    string line;
+
+    while(getline(infile, line)){
+        stringstream ss(line);
+        string dummy;
+        getline(ss, dummy, ',');    // Get string rideID
+
+        int id = stoi(dummy);
+
+        if (id > maxID)
+            maxID = id;
+    }
+    
+    return maxID + 1;
+}
+
+
+bool rideConflict(const Ride &ride)
+{
+    /*
+        Check Rides:
+            Same driver -> same date -> same time
+    */
+
+    ifstream infile("rides.csv");
+
+    if (!infile)
+        return false;   // No file means no conflict
+    
+    string line;
+
+    while (getline (infile, line))
+    {
+        stringstream ss(line);
+        string dummy, date, time, cnic;
+
+        getline (ss, dummy, ',');   // Ignore rideID
+        getline (ss, cnic, ',');
+        getline (ss, dummy, ',');   // Ignore route
+        getline (ss, date, ',');
+        getline (ss, time, ',');
+
+        if (cnic == ride.driver_cnic && date == ride.date && time == ride.time)
+            return true;
+    }
+}
+
+
+void append_rideto_csv(const Ride &ride)
+{
+    ofstream outfile("rides.csv", ios::app);
+    if (!outfile){
+        cout << "Error opening rides.csv!" << endl;
+        return;
+    }
+
+    outfile << ride.rideID << ","
+            << ride.driver_cnic << ","
+            << ride.route << ","
+            << ride.date << ","
+            << ride.time << ","
+            << ride.totalSeats << ","
+            << ride.availableSeats << ","
+            << "" << endl; // For now rider array is empty
+}
+
+

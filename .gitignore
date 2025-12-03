@@ -41,4 +41,4 @@
 *.dwo
 
 # data files
-*.txt
+*.csv

@@ -3,7 +3,6 @@
 
 using namespace std;
 
-
 int main()
 {
     int choice;
@@ -20,7 +19,7 @@ int main()
             cout << "Enter your choice: ";
             cin >> choice;
 
-           if (choice < 1 || choice > 7)
+            if (choice < 1 || choice > 7)
             {
                 cout << "Invalid Choice! Choice must be between 1-7" << endl;
                 cout << "----------------------------------------" << endl;
@@ -40,8 +39,8 @@ int main()
         case 2:
             clearScreen();
             cout << "Create Ride (Driver) selected." << endl;
+            createRide();
             waitForEnter();
-            // Ride creation logic here
             break;
         case 3:
             clearScreen();
@@ -78,10 +77,11 @@ int main()
     return 0;
 }
 
+// ================= User Registration Function ================= //
 
 void registerUser()
 {
-    // Created a new user and collect details
+    // Created a new user
     User newUser;
     printHeader("\t  REGISTER USER");
 
@@ -107,7 +107,6 @@ void registerUser()
         cout << "Enter Role | 1. Driver  2. Rider  3. Both: ";
         cin >> newUser.role;
 
-        
         if (newUser.role < 1 || newUser.role > 3)
         {
             cout << "Invalid role selected. Please choose 1, 2, or 3." << endl;
@@ -168,3 +167,60 @@ void registerUser()
     printSuccessMessage(newUser);
 }
 
+// ================= Ride Creation Function ================= //
+
+void createRide()
+{
+    printHeader("\tCREATE RIDE - DRIVER MODULE");
+
+    Ride newRide;
+
+    while (true)
+    {
+        cout << "Enter CNIC: ";
+        cin >> newRide.driver_cnic;
+        // clear rest of line after formatted input
+        cin.ignore();
+        if (validateCNIC(newRide.driver_cnic))
+            break;
+    }
+
+    if (!isDriver(newRide.driver_cnic))
+    {
+        cout << endl
+             << "You are not Registered as a driver!" << endl;
+        cout << "----------------------------------------" << endl;
+        return;
+    }
+
+    cout << "Enter Route (e.g. Johar -> University): ";
+    getline(cin, newRide.route);
+
+    cout << "Enter Date (DD-MM-YY): ";
+    getline(cin, newRide.date);
+
+    cout << "Enter Departure Time (HH:MM): ";
+    getline(cin, newRide.time);
+
+    cout << "Enter Total Seats Available: ";
+    cin >> newRide.totalSeats;
+    cin.ignore();
+
+    if (rideConflict(newRide))
+    {
+        cout << endl
+             << "You already have a ride scheduled at this date and time!" << endl;
+        cout << "----------------------------------------" << endl;
+        return;
+    }
+
+    newRide.rideID = get_next_ride_ID();
+    newRide.availableSeats = newRide.totalSeats;
+    newRide.riderCount = 0;
+
+    append_rideto_csv(newRide);
+
+    cout << endl << "Ride created Successfully!"<< endl;
+    cout << "Ride ID is " << newRide.rideID << endl;
+    cout << "----------------------------------------" << endl;
+}
