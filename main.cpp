@@ -45,14 +45,14 @@ int main()
         case 3:
             clearScreen();
             cout << "Search Rides (Rider) selected." << endl;
+            searchRides();
             waitForEnter();
-            // Ride search logic here
             break;
         case 4:
             clearScreen();
             cout << "Book Ride selected." << endl;
+            bookRide();
             waitForEnter();
-            // Ride booking logic here
             break;
         case 5:
             clearScreen();
@@ -196,7 +196,7 @@ void createRide()
     cout << "Enter Route (e.g. Johar -> University): ";
     getline(cin, newRide.route);
 
-    cout << "Enter Date (DD-MM-YY): ";
+    cout << "Enter Date (DD-MM-YYYY): ";
     getline(cin, newRide.date);
 
     cout << "Enter Departure Time (HH:MM): ";
@@ -224,3 +224,6 @@ void createRide()
     cout << "Ride ID is " << newRide.rideID << endl;
     cout << "----------------------------------------" << endl;
 }
+
+
+

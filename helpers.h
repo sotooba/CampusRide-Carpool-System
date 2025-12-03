@@ -37,5 +37,10 @@ bool isDriver(const string &cnic);
 int get_next_ride_ID();
 void append_rideto_csv(const Ride &ride);
 bool rideConflict(const Ride &ride);
+void searchRides();
+void printTableHeader();
+void bookRide();
+bool isUser(const string &cnic);
+
 
 #endif
