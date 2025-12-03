@@ -1,0 +1,38 @@
+#ifndef HELPERS_H
+#define HELPERS_H
+
+#include <string>
+using namespace std;
+
+struct User
+{
+    string cnic, name, department, contact;
+    int age, role;
+    int vehicle_capacity;
+};
+
+struct Ride
+{
+    int rideID;
+    string driver_cnic;
+    string route, date, time;
+    int totalSeats, availableSeats;
+    string riders[50];
+    int riderCount;
+};
+
+
+void printHeader(string prompt);
+void viewMenu();
+void clearScreen();
+void waitForEnter();
+bool validateCNIC(string &cnic);
+void registerUser();
+string normalizePhone(const string &number);
+bool isValidNumber(const string &number);
+void saveUser(const User &user);
+void printSuccessMessage(const User &user);
+
+
+
+#endif
