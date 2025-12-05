@@ -42,7 +42,14 @@ void printTableHeader();
 void bookRide();
 bool isUser(const string &cnic);
 void showStatistics();
+void printResults(const int totalUsers, const int totalDrivers, const int totalRiders, const int both, const int totalRides);
 void driverStats();
+void adminMenu();
+void viewAllUsers();
+void viewAllRides();
+void filterRidesByDateRoute();
+void printLine();
+
 
 
 #endif

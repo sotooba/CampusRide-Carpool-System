@@ -243,6 +243,8 @@ bool rideConflict(const Ride &ride)
         if (cnic == ride.driver_cnic && date == ride.date && time == ride.time)
             return true;
     }
+
+    return false;
 }
 
 void append_rideto_csv(const Ride &ride)
@@ -354,7 +356,7 @@ void searchRides()
         cout << "--------------------------------------------------------" << endl;
     }
 
-    cout << "--------------------------------------------------------" << endl;
+    cout << "-----------------------------------------------------------------------------" << endl;
 }
 
 void printTableHeader()
@@ -598,6 +600,13 @@ void showStatistics()
     }
 
     // PRINT RESULTS
+    printResults(totalUsers, totalDrivers, totalRiders, both, totalRides);
+    
+}
+
+
+void printResults(const int totalUsers, const int totalDrivers, const int totalRiders, const int both, const int totalRides)
+{
     cout << "Total Registered Users : " << totalUsers << endl;
     cout << "Total Drivers          : " << totalDrivers << endl;
     cout << "Total Riders           : " << totalRiders << endl;
@@ -615,10 +624,9 @@ void showStatistics()
     cin >> choice;
 
     if (choice == 'Y' || choice == 'y')
-    {
         driverStats();
-    }
 }
+
 
 void driverStats()
 {
@@ -700,10 +708,190 @@ void driverStats()
 
     cout << "----------------------------------------" << endl;
 
-    // Recommendation
+
     if (avgFill < 50.0)
     {
         cout << "Recommendation: Consider posting earlier or adjusting your departure time." << endl;
         cout << "----------------------------------------" << endl;
     }
+}
+
+
+// ================= View All Users ================= //
+void viewAllUsers()
+{
+    printHeader("\tALL REGISTERED USERS");
+
+    ifstream infile("users.csv");
+    if (!infile)
+    {
+        cout << "No users registered yet." << endl;
+        return;
+    }
+
+    string line;
+    cout << left << setw(8) << "S.No"
+         << setw(25) << "CNIC"
+         << setw(25) << "Name"
+         << setw(10) << "Role"
+         << setw(5) << "Age"
+         << setw(25) << "Department"
+         << setw(15) << "Contact"
+         << setw(10) << "Capacity" << endl;
+    printLine();
+
+    int i = 0;
+    while (getline(infile, line))
+    {
+        stringstream ss(line);
+        string cnic, name, roleStr, ageStr, dept, contact, capacityStr;
+        getline(ss, cnic, ',');
+        getline(ss, name, ',');
+        getline(ss, roleStr, ',');
+        getline(ss, ageStr, ',');
+        getline(ss, dept, ',');
+        getline(ss, contact, ',');
+        getline(ss, capacityStr, ',');
+
+        int role = stoi(roleStr);
+        string roleName;
+        if (role == 1) roleName = "Driver";
+        else if (role == 2) roleName = "Rider";
+        else roleName = "Both";
+
+        cout << left << setw(8) << i + 1
+             << setw(25) << cnic
+             << setw(25) << name
+             << setw(10) << roleName
+             << setw(5) << ageStr
+             << setw(25) << dept
+             << setw(15) << contact
+             << setw(10) << capacityStr << endl;
+        i++;
+    }
+
+   printLine();
+}
+
+// ================= View All Rides ================= //
+void viewAllRides()
+{
+    printHeader("\t  ALL RIDES");
+
+    ifstream infile("rides.csv");
+    if (!infile)
+    {
+        cout << "No rides available yet!" << endl;
+        return;
+    }
+
+    string line;
+    cout << left << setw(10) << "RideID"
+         << setw(25) << "Driver CNIC"
+         << setw(15) << "Route"
+         << setw(15) << "Date"
+         << setw(10) << "Time"
+         << setw(10) << "Seats"
+         << setw(15) << "Available"
+         << setw(20) << "Riders" << endl;
+    printLine();
+
+    while (getline(infile, line))
+    {
+        stringstream ss(line);
+        string rideID, driver, route, date, time, totalSeats, availableSeats, riders;
+        getline(ss, rideID, ',');
+        getline(ss, driver, ',');
+        getline(ss, route, ',');
+        getline(ss, date, ',');
+        getline(ss, time, ',');
+        getline(ss, totalSeats, ',');
+        getline(ss, availableSeats, ',');
+        getline(ss, riders);
+
+        cout << left << setw(10) << rideID
+             << setw(25) << driver
+             << setw(15) << route
+             << setw(15) << date
+             << setw(10) << time
+             << setw(10) << totalSeats
+             << setw(15) << availableSeats
+             << setw(20) << riders << endl;
+    }
+
+    printLine();
+}
+
+// ================= Filter Rides by Date/Route ================= //
+void filterRidesByDateRoute()
+{
+    printHeader("\t  FILTER RIDES");
+
+    ifstream infile("rides.csv");
+    if (!infile)
+    {
+        cout << "No rides available yet!" << endl;
+        return;
+    }
+
+    string routeFilter, dateFilter;
+    // cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clean buffer
+
+    cout << "Enter Route to filter (leave blank for all): ";
+    getline(cin, routeFilter);
+    cout << "Enter Date to filter (DD-MM-YYYY, leave blank for all): ";
+    getline(cin, dateFilter);
+
+    string line;
+    bool found = false;
+
+    cout << endl;
+    printLine();
+    cout << left << setw(10) << "RideID"
+         << setw(25) << "Driver CNIC"
+         << setw(15) << "Route"
+         << setw(15) << "Date"
+         << setw(10) << "Time"
+         << setw(10) << "Seats"
+         << setw(15) << "Available"
+         << setw(20) << "Riders" << endl;
+    printLine();
+
+    while (getline(infile, line))
+    {
+        stringstream ss(line);
+        string rideID, driver, route, date, time, totalSeats, availableSeats, riders;
+        getline(ss, rideID, ',');
+        getline(ss, driver, ',');
+        getline(ss, route, ',');
+        getline(ss, date, ',');
+        getline(ss, time, ',');
+        getline(ss, totalSeats, ',');
+        getline(ss, availableSeats, ',');
+        getline(ss, riders);
+
+        if ((routeFilter.empty() || route == routeFilter) &&
+            (dateFilter.empty() || date == dateFilter))
+        {
+            found = true;
+            cout << left << setw(10) << rideID
+                 << setw(25) << driver
+                 << setw(15) << route
+                 << setw(15) << date
+                 << setw(10) << time
+                 << setw(10) << totalSeats
+                 << setw(15) << availableSeats
+                 << setw(20) << riders << endl;
+        }
+    }
+
+    if (!found)
+        cout << "No rides matched your filter criteria." << endl;
+
+    printLine();
+}
+
+void printLine()
+{
+    cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 }

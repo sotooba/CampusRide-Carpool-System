@@ -61,10 +61,9 @@ int main()
             break;
         case 6:
             clearScreen();
-            cout << "Admin selected." << endl;
-            waitForEnter();
-            // Admin logic here
+            adminMenu();
             break;
+
         case 7:
             cout << "------------------------------------------------------------" << endl;
             cout << "Exiting the system. Goodbye!" << endl;
@@ -223,4 +222,51 @@ void createRide()
          << "Ride created Successfully!" << endl;
     cout << "Ride ID is " << newRide.rideID << endl;
     cout << "----------------------------------------" << endl;
+}
+
+// ================= Admin Menu ================= //
+void adminMenu()
+{
+    while (true)
+    {
+        clearScreen();
+        printHeader("\t  ADMIN MODULE");
+        cout << "1. View All Users" << endl;
+        cout << "2. View All Rides" << endl;
+        cout << "3. Filter Rides by Date/Route" << endl;
+        cout << "4. Back to Main Menu" << endl;
+        cout << "----------------------------------------" << endl;
+
+        int choice;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+
+        switch (choice)
+        {
+        case 1:
+            clearScreen();
+            viewAllUsers();
+            waitForEnter();
+            break;
+        case 2:
+            clearScreen();
+            viewAllRides();
+            waitForEnter();
+            break;
+        case 3:
+            clearScreen();
+            filterRidesByDateRoute();
+            waitForEnter();
+            break;
+        case 4:
+            return;
+        default:
+            cout << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "Invalid choice! Enter 1-4." << endl;
+            cout << "----------------------------------------" << endl;
+            waitForEnter();
+        }
+    }
 }
