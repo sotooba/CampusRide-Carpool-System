@@ -58,9 +58,6 @@ CampusRide-Carpool-System/
 
 ---
 
-
----
-
 ## Compilation & Running
 
 1. **Compile using g++ (Linux/macOS/Windows with MinGW):**
@@ -88,8 +85,7 @@ g++ main.cpp helpers.cpp -o CampusRide
 ---
 
 ## Dependencies
--- Standard C++ libraries:
-   -- <iostream>, <fstream>, <string>, <sstream>, <iomanip>, <limits>, <algorithm>
+Standard C++ libraries: iostream, fstream, string, sstream, iomanip,  algorithm
 
 ---
 
