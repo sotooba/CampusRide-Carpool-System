@@ -11,6 +11,7 @@
 
 using namespace std;
 
+// Print the main header
 void printHeader(string prompt)
 {
     cout << "=======================================================" << endl;
@@ -18,6 +19,7 @@ void printHeader(string prompt)
     cout << "=======================================================" << endl;
 }
 
+// Print the menu
 void viewMenu()
 {
     cout << "1. Register User" << endl;
@@ -29,6 +31,7 @@ void viewMenu()
     cout << "7. Exit" << endl;
 }
 
+// Clear the previous clutter on the screen
 void clearScreen()
 {
 // Clear the console screen
@@ -39,6 +42,7 @@ void clearScreen()
 #endif
 }
 
+// Wait for the Enter key to be pressed
 void waitForEnter()
 {
     cout << "Press Enter key to continue: ";
@@ -50,6 +54,7 @@ void waitForEnter()
     cout << endl;
 }
 
+// Validate the CNIC
 bool validateCNIC(string &cnic)
 {
     // Remove any dashes from the CNIC
@@ -85,6 +90,7 @@ bool validateCNIC(string &cnic)
     return true;
 }
 
+// Normalize the contact by removing any dashes or spaces
 string normalizePhone(const string &number)
 {
     string onlydigits;
@@ -97,6 +103,7 @@ string normalizePhone(const string &number)
     return onlydigits;
 }
 
+// Validate the contact numbr
 bool isValidNumber(const string &number)
 {
     string n = normalizePhone(number);
@@ -107,6 +114,7 @@ bool isValidNumber(const string &number)
     return true;
 }
 
+// Save the user info to the file
 void saveUser(const User &user)
 {
     ofstream outfile("users.csv", ios::app);
@@ -128,6 +136,7 @@ void saveUser(const User &user)
             << user.vehicle_capacity << endl;
 }
 
+// Print message
 void printSuccessMessage(const User &user)
 {
     // Print the summary
@@ -161,6 +170,7 @@ void printSuccessMessage(const User &user)
     cout << "----------------------------------------" << endl;
 }
 
+// Check if the driver is regitered
 bool isDriver(const string &cnic)
 {
     ifstream infile("users.csv");
@@ -190,6 +200,7 @@ bool isDriver(const string &cnic)
     return false;
 }
 
+// Get the id for the Ride
 int get_next_ride_ID()
 {
     ifstream infile("rides.csv");
@@ -215,6 +226,7 @@ int get_next_ride_ID()
     return maxID + 1;
 }
 
+// Check for the confilict
 bool rideConflict(const Ride &ride)
 {
     /*
@@ -247,6 +259,7 @@ bool rideConflict(const Ride &ride)
     return false;
 }
 
+// Append bookings to the file
 void append_rideto_csv(const Ride &ride)
 {
     ofstream outfile("rides.csv", ios::app);
@@ -266,11 +279,12 @@ void append_rideto_csv(const Ride &ride)
             << "" << endl; // For now rider array is empty
 }
 
+// ================= Search for Ride ================= 
 void searchRides()
 {
     printHeader("SEARCH RIDES - RIDER MODULE");
 
-    // --- Read all rides into an array ---
+    // Read all rides into an array 
     Ride rides[20];
     int rideCount = 0;
 
@@ -309,7 +323,7 @@ void searchRides()
         rides[rideCount++] = r;
     }
 
-    // --- Ask user for route and date ---
+    // Ask user for route and date
     string route, date;
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clean buffer
@@ -327,7 +341,7 @@ void searchRides()
     cout << endl;
     printTableHeader();
 
-    // --- Step 3: Search and display results ---
+    // Search and display results
     bool found = false;
 
     for (int i = 0; i < rideCount; i++)
@@ -359,6 +373,7 @@ void searchRides()
     cout << "-----------------------------------------------------------------------------" << endl;
 }
 
+// Print the table header
 void printTableHeader()
 {
     cout << left << setw(15) << "Ride ID"
@@ -370,6 +385,7 @@ void printTableHeader()
          << "-----------------------------------------------------------------------------" << endl;
 }
 
+// Validate if the user is registered
 bool isUser(const string &cnic)
 {
     ifstream infile("users.csv");
@@ -399,6 +415,7 @@ bool isUser(const string &cnic)
     return false;
 }
 
+// ================= Book a Ride ================= 
 void bookRide()
 {
     printHeader("\tBOOK RIDE - RIDER MODULE");
@@ -538,6 +555,7 @@ void bookRide()
     cout << "----------------------------------------" << endl;
 }
 
+// ================= Show Statistics ================= 
 void showStatistics()
 {
     printHeader("SYSTEM STATISTICS");
@@ -604,7 +622,7 @@ void showStatistics()
     
 }
 
-
+// Print the resuslts
 void printResults(const int totalUsers, const int totalDrivers, const int totalRiders, const int both, const int totalRides)
 {
     cout << "Total Registered Users : " << totalUsers << endl;
@@ -627,7 +645,7 @@ void printResults(const int totalUsers, const int totalDrivers, const int totalR
         driverStats();
 }
 
-
+// ================= Show driver statistics ================= 
 void driverStats()
 {
     clearScreen();
@@ -717,7 +735,7 @@ void driverStats()
 }
 
 
-// ================= View All Users ================= //
+// ================= View All Users ================= 
 void viewAllUsers()
 {
     printHeader("\tALL REGISTERED USERS");
@@ -773,7 +791,7 @@ void viewAllUsers()
    printLine();
 }
 
-// ================= View All Rides ================= //
+// ================= View All Rides ================= 
 void viewAllRides()
 {
     printHeader("\t  ALL RIDES");
@@ -822,7 +840,7 @@ void viewAllRides()
     printLine();
 }
 
-// ================= Filter Rides by Date/Route ================= //
+// ================= Filter Rides by Date/Route ================= 
 void filterRidesByDateRoute()
 {
     printHeader("\t  FILTER RIDES");
@@ -835,7 +853,6 @@ void filterRidesByDateRoute()
     }
 
     string routeFilter, dateFilter;
-    // cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clean buffer
 
     cout << "Enter Route to filter (leave blank for all): ";
     getline(cin, routeFilter);
@@ -891,6 +908,7 @@ void filterRidesByDateRoute()
     printLine();
 }
 
+// Print dash line
 void printLine()
 {
     cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;

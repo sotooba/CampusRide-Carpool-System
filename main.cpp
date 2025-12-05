@@ -75,7 +75,7 @@ int main()
     return 0;
 }
 
-// ================= User Registration Function ================= //
+// ================= User Registration Function ================= 
 
 void registerUser()
 {
@@ -165,7 +165,7 @@ void registerUser()
     printSuccessMessage(newUser);
 }
 
-// ================= Ride Creation Function ================= //
+// ================= Ride Creation Function ================= 
 
 void createRide()
 {
@@ -224,7 +224,7 @@ void createRide()
     cout << "----------------------------------------" << endl;
 }
 
-// ================= Admin Menu ================= //
+// ================= Admin Menu ================= 
 void adminMenu()
 {
     while (true)
