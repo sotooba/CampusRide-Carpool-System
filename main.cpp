@@ -56,9 +56,8 @@ int main()
             break;
         case 5:
             clearScreen();
-            cout << "Statistics selected." << endl;
+            showStatistics();
             waitForEnter();
-            // Statistics logic here
             break;
         case 6:
             clearScreen();
@@ -220,10 +219,8 @@ void createRide()
 
     append_rideto_csv(newRide);
 
-    cout << endl << "Ride created Successfully!"<< endl;
+    cout << endl
+         << "Ride created Successfully!" << endl;
     cout << "Ride ID is " << newRide.rideID << endl;
     cout << "----------------------------------------" << endl;
 }
-
-
-

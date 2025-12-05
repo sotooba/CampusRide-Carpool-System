@@ -376,8 +376,8 @@ bool isUser(const string &cnic)
         return false;
 
     string line;
-    while (getline(infile, line))   // Read whole line
-    {                          
+    while (getline(infile, line)) // Read whole line
+    {
         stringstream ss(line); // Create string stream from that line
 
         string dummy, fileCNIC;
@@ -420,14 +420,18 @@ void bookRide()
         string item;
         stringstream ss(line);
 
-        getline(ss, item, ','); r.rideID = stoi(item);
+        getline(ss, item, ',');
+        r.rideID = stoi(item);
         getline(ss, r.driver_cnic, ',');
         getline(ss, r.route, ',');
         getline(ss, r.date, ',');
         getline(ss, r.time, ',');
-        getline(ss, item, ','); r.totalSeats = stoi(item);
-        getline(ss, item, ','); r.availableSeats = stoi(item);
-        getline(ss, item); r.riderCount = 0;
+        getline(ss, item, ',');
+        r.totalSeats = stoi(item);
+        getline(ss, item, ',');
+        r.availableSeats = stoi(item);
+        getline(ss, item);
+        r.riderCount = 0;
 
         stringstream ridersStream(item);
         string riderCNIC;
@@ -530,4 +534,176 @@ void bookRide()
     cout << endl
          << "Seat booked successfully!" << endl;
     cout << "----------------------------------------" << endl;
+}
+
+void showStatistics()
+{
+    printHeader("SYSTEM STATISTICS");
+
+    ifstream userFile("users.csv");
+    ifstream rideFile("rides.csv");
+
+    if (!userFile)
+    {
+        cout << "No users registered yet." << endl;
+        cout << "----------------------------------------" << endl;
+        return;
+    }
+
+    // USER COUNTS
+    int totalUsers = 0, totalDrivers = 0, totalRiders = 0, both = 0;
+
+    string line;
+    while (getline(userFile, line))
+    {
+        if (line.empty())
+            continue;
+
+        stringstream ss(line);
+        string cnic, name, dept, contact;
+        string roleStr, ageStr, capacityStr;
+
+        getline(ss, cnic, ',');
+        getline(ss, name, ',');
+        getline(ss, roleStr, ',');
+        getline(ss, ageStr, ',');
+        getline(ss, dept, ',');
+        getline(ss, contact, ',');
+        getline(ss, capacityStr, ',');
+
+        int role = stoi(roleStr);
+        totalUsers++;
+
+        if (role == 1)
+            totalDrivers++;
+        else if (role == 2)
+            totalRiders++;
+        else if (role == 3)
+        {
+            totalDrivers++;
+            totalRiders++;
+            both++;
+        }
+    }
+
+    // RIDE COUNTS
+    int totalRides = 0;
+    if (rideFile)
+    {
+        while (getline(rideFile, line))
+        {
+            if (!line.empty())
+                totalRides++;
+        }
+    }
+
+    // PRINT RESULTS
+    cout << "Total Registered Users : " << totalUsers << endl;
+    cout << "Total Drivers          : " << totalDrivers << endl;
+    cout << "Total Riders           : " << totalRiders << endl;
+    cout << "Users with Both Roles  : " << both << endl;
+
+    cout << "----------------------------------------" << endl;
+
+    cout << "Total Active Rides     : " << totalRides << endl;
+
+    cout << "----------------------------------------" << endl;
+
+    // Ask if user wants driver-specific stats
+    char choice;
+    cout << "Do you want statistics of a specific driver? (Y/N): ";
+    cin >> choice;
+
+    if (choice == 'Y' || choice == 'y')
+    {
+        driverStats();
+    }
+}
+
+void driverStats()
+{
+    clearScreen();
+    printHeader("DRIVER SPECIFIC STATISTICS");
+
+    string cnic;
+
+    while (true)
+    {
+        cout << "Enter Driver CNIC: ";
+        cin >> cnic;
+        cin.ignore();
+        if (validateCNIC(cnic))
+            break;
+    }
+
+    if (!isDriver(cnic))
+    {
+        cout << "This user is not registered as a driver!" << endl;
+        cout << "----------------------------------------" << endl;
+        return;
+    }
+
+    ifstream rideFile("rides.csv");
+
+    if (!rideFile)
+    {
+        cout << "No rides available!" << endl;
+        cout << "----------------------------------------" << endl;
+        return;
+    }
+
+    int rideCount = 0;
+    int totalSeatsOffered = 0;
+    int totalSeatsFilled = 0;
+
+    string line;
+    while (getline(rideFile, line))
+    {
+        stringstream ss(line);
+        string id, driver, route, date, time, seatTotal, seatsLeft, riders;
+
+        getline(ss, id, ',');
+        getline(ss, driver, ',');
+        getline(ss, route, ',');
+        getline(ss, date, ',');
+        getline(ss, time, ',');
+        getline(ss, seatTotal, ',');
+        getline(ss, seatsLeft, ',');
+        getline(ss, riders); // riders list
+
+        if (driver == cnic)
+        {
+            rideCount++;
+            int total = stoi(seatTotal);
+            int left = stoi(seatsLeft);
+
+            totalSeatsOffered += total;
+            totalSeatsFilled += (total - left);
+        }
+    }
+
+    if (rideCount == 0)
+    {
+        cout << "No rides found for this driver." << endl;
+        cout << "----------------------------------------" << endl;
+        return;
+    }
+
+    // PRINT RESULTS
+    cout << "----------------------------------------" << endl;
+    cout << "Total Rides Created  : " << rideCount << endl;
+    cout << "Total Seats Offered  : " << totalSeatsOffered << endl;
+    cout << "Total Seats Filled   : " << totalSeatsFilled << endl;
+
+    double avgFill = (totalSeatsFilled * 100.0) / totalSeatsOffered;
+    cout << "Average Seats Filled : " << fixed << setprecision(2) << avgFill << "%\n";
+
+    cout << "----------------------------------------" << endl;
+
+    // Recommendation
+    if (avgFill < 50.0)
+    {
+        cout << "Recommendation: Consider posting earlier or adjusting your departure time." << endl;
+        cout << "----------------------------------------" << endl;
+    }
 }

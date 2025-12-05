@@ -41,6 +41,8 @@ void searchRides();
 void printTableHeader();
 void bookRide();
 bool isUser(const string &cnic);
+void showStatistics();
+void driverStats();
 
 
 #endif
