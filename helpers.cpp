@@ -558,7 +558,7 @@ void bookRide()
 // ================= Show Statistics ================= 
 void showStatistics()
 {
-    printHeader("SYSTEM STATISTICS");
+    printHeader("\t SYSTEM STATISTICS");
 
     ifstream userFile("users.csv");
     ifstream rideFile("rides.csv");
